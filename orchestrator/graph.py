@@ -1,4 +1,3 @@
-from codecs import raw_unicode_escape_decode
 from langgraph.graph import StateGraph,END,START
 from typing import TypedDict
 from brain.router import route
@@ -8,23 +7,38 @@ class AgentState(TypedDict):
     input: str
     output: str
 
-def process_node(state:AgentState):
-    prompt = state["input"]
-    
-    decision = route(prompt)
+def router_node(state:AgentState):
+    decision = route(state["input"])
+    return {"decision":decision}
 
-    if decision == "local":
-        response = {"output":ask_local_llm(prompt)}
-    else:
-        response = "Cloud not implemented yet"
+def local_node(state:AgentState):
+    response = ask_local_llm(state["input"])
+    return {"output":response}
 
-    return response
+def cloud_node(state: AgentState):
+    return {"output": "🌐 Cloud feature coming soon."}
+
+def action_node(state: AgentState):
+    return {"output": "🛠️ Action execution coming next phase."}
 
 def build_graph():
     builder=StateGraph(AgentState)
     
-    builder.add_node("process",process_node)
+    builder.add_node("router",router_node)
+    builder.add_node("local",local_node)
+    builder.add_node("cloud",cloud_node)
+    builder.add_node("action",action_node)
     
-    builder.set_entry_point("process")
-    builder.set_finish_point("process")
+    builder.set_entry_point("router")
+    builder.add_conditional_edges("router",
+                                lambda x:x["decision"],
+                                {
+                                    "local":"local",
+                                    "cloud":"cloud",
+                                    "action":"action"
+                                })
+    builder.set_finish_point("local")
+    builder.set_finish_point("cloud")
+    builder.set_finish_point("action")
+    
     return builder.compile()
