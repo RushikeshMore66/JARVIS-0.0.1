@@ -7,3 +7,14 @@ ollama
 sounddevice
 scipy
 langchain-community
+open-interpreter
+pyautogui
+pyttsx3
+pvporcupine
+pyscreeze
+chromadb
+sentence-transformers
+requests
+langchain-google-genai
+python-dotenv
+langchain-ollama

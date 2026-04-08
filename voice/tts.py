@@ -1,17 +1,22 @@
-import pyttsx3
+from elevenlabs import play, generate
+import os
+from dotenv import load_dotenv
 
-engine = pyttsx3.init()
+load_dotenv()
 
-engine.setProperty("rate",175)
-engine.setProperty("volume",1.0)
+ELEVEN_API_KEY = os.getenv("ELEVEN_API_KEY")
 
-def speak(text:str):
-    print(f"🤖 JARVIS speaking: {text}")
-    
-    engine.say(text)
-    engine.runAndWait()
+def speak(text: str):
+    print(f"🔊 JARVIS: {text}")
 
-    
+    audio = generate(
+        text=text,
+        voice="Brian",
+        model="eleven_multilingual_v2",
+        api_key=ELEVEN_API_KEY
+    )
+
+    play(audio)
     
 
     

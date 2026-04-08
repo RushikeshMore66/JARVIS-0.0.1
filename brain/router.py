@@ -1,11 +1,17 @@
-def route(prompt:str):
+def route(prompt: str):
     prompt = prompt.lower()
 
-    if  any(word in prompt for word in ["internet","search","web","google"]):
-        return "cloud"
+    # Greeting detection
+    if any(word in prompt for word in ["hey", "hello", "hi", "jarvis"]):
+        return "chat"
 
-    if any(word in prompt for word in ["open","launch","start","run","close","click"]):
+    if any(word in prompt for word in ["plan", "schedule"]):
+        return "autonomous"
+
+    if any(word in prompt for word in ["open", "run", "execute"]):
         return "action"
-    
+
+    if any(word in prompt for word in ["screen", "see"]):
+        return "vision"
+
     return "local"
-    
