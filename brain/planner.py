@@ -1,5 +1,4 @@
-from brain.llm import ask_local_llm
-
+from brain.llm import ask_llm
 
 def plan_task(prompt: str):
     planning_prompt = f"""
@@ -12,6 +11,6 @@ Task: {prompt}
 Return steps in numbered format.
 """
 
-    plan = ask_local_llm(planning_prompt)
+    plan = ask_llm(planning_prompt)
 
     return plan

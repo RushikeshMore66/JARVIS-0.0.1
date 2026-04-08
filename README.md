@@ -1,236 +1,54 @@
-# 🧠 JARVIS OS – Local-First AI Desktop Agent
+# JARVIS OS - Local-First AI Desktop Assistant
 
-> A fully local-first, multimodal AI assistant that can see your screen, hear your voice, and control your computer — with optional cloud intelligence when needed.
-> 
+Production-oriented desktop assistant with voice, vision, local LLM default routing, cloud fallback, action execution, and memory.
 
----
+## Architecture
 
-## 🚀 Vision
+- `brain/`: routing, planning, and LLM provider selection
+- `voice/`: wake word, STT, TTS
+- `actions/`: system actions, MCP adapters, vision capture
+- `memory/`: vector memory storage/retrieval
+- `orchestrator/`: workflow graph + execution manager
 
-JARVIS OS is not a chatbot.
+Main flow:
 
-It is a **Personal AI Operating System Layer** that sits on top of your machine and enables:
+`Wake Word -> STT -> Intent -> Router -> Planner -> Action -> Response`
 
-- 🎤 Natural voice interaction (real-time)
-- 👁️ Screen understanding (vision)
-- ⚡ Direct system control (keyboard, mouse, apps)
-- 🧠 Memory & contextual awareness
-- 🌐 Optional cloud intelligence (only when required)
+## Prerequisites
 
----
+- Python `3.11+`
+- Windows audio dependencies for `pyaudio` and `sounddevice`
+- Optional but recommended:
+  - Ollama running locally for local model usage
+  - Gemini API key for cloud fallback
+  - Picovoice key for wake word
+  - ElevenLabs key for TTS
 
-## 🧩 Core Philosophy
-
-```bash
-LOCAL-FIRST → PRIVATE, FAST
-CLOUD-OPTIONAL → POWERFUL, SCALABLE
-```
-
----
-
-## 🏗️ Architecture Overview
-
-```
-JARVIS/
-├── brain/              # LLM routing + reasoning
-├── voice/              # STT + TTS + wake word
-├── vision/             # screen capture + analysis
-├── actions/            # OS control + tool execution
-├── memory/             # short-term + long-term memory
-├── orchestrator/       # LangGraph workflow engine
-```
-
----
-
-## 🧠 Tech Stack
-
-### 🧠 Agent Framework
-
-- LangGraph (stateful orchestration)
-- LangChain (tools + integrations)
-
-### 🧠 LLM Layer
-
-- Local: Ollama (LLaMA 3.2 Vision)
-- Cloud (optional): Gemini 1.5 Pro
-
-### 🎤 Voice
-
-- STT: Whisper (local)
-- Wake Word: Porcupine
-- TTS: Cartesia / ElevenLabs
-
-### 👁️ Vision
-
-- PyAutoGUI (screenshots)
-- PIL / OpenCV
-
-### ⚡ Execution Layer
-
-- Open Interpreter (system control via Python)
-
-### 🔌 Tool Integration
-
-- Model Context Protocol (MCP)
-
-### 🧠 Memory
-
-- Chroma / FAISS (vector DB)
-
----
-
-## 🔁 System Flow
-
-```
-Wake Word
-   ↓
-Speech-to-Text (Whisper)
-   ↓
-Intent Classification
-   ↓
-Router (Local vs Cloud)
-   ↓
-Planner (LangGraph)
-   ↓
-Tool Execution (Interpreter + MCP)
-   ↓
-Memory Update
-   ↓
-Text-to-Speech Response
-```
-
----
-
-## 🔥 Features
-
-- ✅ Fully local voice interaction
-- ✅ Screen-aware AI (vision enabled)
-- ✅ Autonomous task execution
-- ✅ Multi-step planning (agent workflows)
-- ✅ Hybrid intelligence (local + cloud)
-- ✅ Persistent memory (context-aware)
-
----
-
-## ⚙️ Installation
-
-### 1. Clone Repo
-
-```bash
-git clone https://github.com/yourusername/jarvis-os.git
-cd jarvis-os
-```
-
-### 2. Create Environment
+## Setup
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-```
-
-### 3. Install Dependencies
-
-```bash
+.venv\Scripts\activate
 pip install -r requirements.txt
+copy .env.example .env
 ```
 
----
+Fill `.env` values as needed.
 
-## 🧠 Setup Local LLM (Ollama)
-
-Install Ollama:
-
-```bash
-ollama run llama3.2-vision
-```
-
----
-
-## ⚡ Install Open Interpreter
-
-```bash
-pip install open-interpreter
-```
-
----
-
-## 🎤 Run JARVIS (Phase 1)
+## Run
 
 ```bash
 python main.py
 ```
 
----
+## Test
 
-## 🧪 Current Status
+```bash
+pytest
+```
 
-| Module | Status |
-| --- | --- |
-| Voice Input | 🚧 In Progress |
-| Brain | 🚧 In Progress |
-| Vision | ⏳ Planned |
-| Actions | ⏳ Planned |
-| Memory | ⏳ Planned |
+## Safety
 
----
-
-## 🧠 Roadmap
-
-### Phase 1
-
-- Voice → Command loop
-- Basic LLM response
-
-### Phase 2
-
-- LangGraph orchestration
-- Tool execution (Interpreter)
-
-### Phase 3
-
-- Vision (screen awareness)
-
-### Phase 4
-
-- MCP integrations (apps)
-
-### Phase 5
-
-- Memory system (RAG)
-
----
-
-## ⚠️ Safety
-
-JARVIS has system-level access.
-
-- Commands are sandboxed
-- Critical actions require confirmation (future)
-- Logs are maintained
-
----
-
-## 🤝 Contributing
-
-PRs are welcome.
-
-This is an experimental AI OS project.
-
----
-
-## 📜 License
-Sarthi AI Labs
-
----
-
-## 🧠 Author
-
-Mr.Rushikesh Sunil More
-
----
-
-## ⭐ Final Note
-
-This is not just an assistant.
-
-This is the beginning of a **personal AI operating system**.
+- Action layer blocks dangerous commands by default.
+- Set `ALLOW_DANGEROUS_ACTIONS=true` only in controlled environments.
+- Action execution logs are written to `logs/actions.log`.

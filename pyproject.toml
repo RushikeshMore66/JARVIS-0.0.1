@@ -1,7 +1,32 @@
 [project]
 name = "jarvis-0-0-1"
 version = "0.1.0"
-description = "Add your description here"
+description = "Desktop JARVIS local-first AI assistant"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+  "python-dotenv",
+  "langchain",
+  "langgraph",
+  "langchain-community",
+  "langchain-google-genai",
+  "langchain-ollama",
+  "openai-whisper",
+  "sounddevice",
+  "numpy",
+  "scipy",
+  "pyaudio",
+  "pvporcupine",
+  "elevenlabs",
+  "open-interpreter",
+  "pyautogui",
+  "pyscreeze",
+  "opencv-python",
+  "mediapipe",
+  "chromadb",
+  "sentence-transformers",
+  "requests",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

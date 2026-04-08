@@ -1,13 +1,12 @@
 from langgraph.graph import StateGraph
 from typing import TypedDict
 
-from brain.llm import ask_local_llm, analyze_screen, ask_cloud_llm
+from brain.llm import ask_local_llm, analyze_screen, ask_cloud_llm, route_llm
 from brain.router import route
 from brain.planner import plan_task
 
 from actions.executor import run_action
 from actions.vision import capture_screen
-from actions.mcp_clients import call_mcp_tool
 from orchestrator.executor import execute_plan
 
 from memory.store import store_memory, retrieve_memory
@@ -30,7 +29,8 @@ def planner_node(state: AgentState):
     return {"output": f"🧠 Plan:\n{plan}"}
 
 def chat_node(state):
-    response = ask_local_llm(state["input"])
+    provider = route_llm(state["input"])
+    response = ask_cloud_llm(state["input"]) if provider == "cloud" else ask_local_llm(state["input"])
     return {"output": response}
 
 
@@ -65,6 +65,11 @@ def cloud_node(state: AgentState):
     response = ask_cloud_llm(state["input"])
     return {"output": f"🌐 (Cloud) {response}"}
 
+
+def interrupt_node(state: AgentState):
+    return {"output": "Understood. I have stopped the current task."}
+
+
 def autonomous_node(state):
     result = execute_plan(state["input"])
     return {"output": result}
@@ -80,6 +85,7 @@ def build_graph():
     builder.add_node("action", action_node)
     builder.add_node("vision", vision_node)
     builder.add_node("cloud", cloud_node)
+    builder.add_node("interrupt", interrupt_node)
     builder.add_node("autonomous", autonomous_node)
 
     builder.set_entry_point("memory")
@@ -96,7 +102,8 @@ def build_graph():
             "vision": "vision",
             "cloud": "cloud",
             "plan": "planner",
-            "autonomous": "autonomous"
+            "autonomous": "autonomous",
+            "interrupt": "interrupt",
         }
     )
 
@@ -106,6 +113,7 @@ def build_graph():
     builder.set_finish_point("action")
     builder.set_finish_point("vision")
     builder.set_finish_point("cloud")
+    builder.set_finish_point("interrupt")
     builder.set_finish_point("autonomous")
 
     return builder.compile()

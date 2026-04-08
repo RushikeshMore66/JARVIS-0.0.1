@@ -1,8 +1,14 @@
 import whisper
 import sounddevice as sd
-import numpy as np
 
-model = whisper.load_model("base")
+_model = None
+
+
+def _get_model():
+    global _model
+    if _model is None:
+        _model = whisper.load_model("base")
+    return _model
 
 
 def listen_command(duration=4, samplerate=16000):
@@ -19,6 +25,7 @@ def listen_command(duration=4, samplerate=16000):
 
     audio = recording.flatten()
 
+    model = _get_model()
     result = model.transcribe(audio)
 
-    return result["text"]
+    return result.get("text", "").strip()
