@@ -1,0 +1,8 @@
+
+LOCALE_MODEL = "llama3.2:latest"
+USE_CLOUD = False
+
+WAKE_WORD = "jarvis"
+
+SAMPLE_RATE = 16000
+CHUNK_SIZE = 1024

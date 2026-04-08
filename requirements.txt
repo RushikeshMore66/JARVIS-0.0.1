@@ -1,0 +1,9 @@
+openai-whisper
+pyaudio
+numpy
+langchain
+langgraph
+ollama
+sounddevice
+scipy
+langchain-community
